@@ -15,6 +15,7 @@ def fmt(value, places='0.0001'):
     return str(Decimal(value).quantize(Decimal(places), rounding=ROUND_HALF_UP))
 def serial(value):
     if isinstance(value, Decimal): return str(value)
+    if hasattr(value, 'to_payload') and callable(value.to_payload): return serial(value.to_payload())
     if isinstance(value, dict): return {str(k):serial(v) for k,v in value.items()}
     if isinstance(value, (list,tuple)): return [serial(v) for v in value]
     return value

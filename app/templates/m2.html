@@ -1,2 +1,13 @@
 {% extends 'base.html' %}
-{% block stage_visual %}{% for r in run.stages["4"].rows[:5] %}<div class="entry"><span>{{r["证券"]}}</span><b>{{r["参考价_CNY"]}}</b></div><div class="factor-track"><i style="width:{{[100,r['复权因子']|float*50]|min}}%"></i></div>{% endfor %}<small>复权因子刻度 0–2</small>{% endblock %}
+{% block stage_visual %}
+<h3 style="margin:0 0 8px;font-size:12px">复权链接续时间线</h3>
+{% for r in current.lineage_rows %}
+<div class="entry {{'diff' if r['状态']=='待确认'}}">
+  <span>{{r['原代码']}} → {{r['新代码']}}<br><small>生效 {{r['生效日']}} · 归属 {{r['归属日期'] or '晚到未登记'}}</small></span>
+  <b>{{r['状态']}}<br><small>{{r['换码记录']}} v{{r['版本']}} · 行{{r['行号']}}</small></b>
+</div>
+{% else %}
+<div class="empty">无换码记录，各代码即独立证券身份。</div>
+{% endfor %}
+<small>已确认换码合并为同一发行人身份；待确认换码只切开归属，复权链在此断点不连乘。</small>
+{% endblock %}

@@ -28,6 +28,7 @@
 | TRAP-14 | 行动定义冲突 | 静默覆盖或误计 | 显式裁决并保留证据 | `app/modules/m2_mapping/rules.py` | `tests/test_m2.py::test_conflicting_action_removed` |
 | TRAP-24 | 现金尾差 | 静默覆盖或误计 | 显式裁决并保留证据 | `app/modules/m5_holdings/rules.py` | `tests/test_m5.py::test_largest_remainder_conservation` |
 | TRAP-25 | 行动版本选择 | 静默覆盖或误计 | 显式裁决并保留证据 | `app/modules/m2_mapping/rules.py` | `tests/test_m2.py::test_latest_action_chosen` |
+| TRAP-31 | 换码复用串链 | 按代码直拼复权因子，旧代码被新发行人复用时串到另一只证券 | 归属确认才合并发行人身份，待确认换码切分不连乘并隔离留证 | `app/lineage.py`、`app/modules/m2_mapping/rules.py`、`app/modules/m4_factors/rules.py` | `tests/test_recode.py` |
 
 ## 对账规则
 

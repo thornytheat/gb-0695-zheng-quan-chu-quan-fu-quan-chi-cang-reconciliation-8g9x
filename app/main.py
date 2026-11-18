@@ -72,6 +72,14 @@ def evidence():
     rows=[]
     for index,stage in result['stages'].items():
         rows.extend({'阶段':index,**r} for r in stage['rows'])
+        # 换码接续依据（M2）与复权链接续/断点（M4）单独成段，便于复核接续位置。
+        for extra_key,extra_label in (('lineage_rows','换码链'),('links','复权链接续'),('pending_links','复权链断点'),('chains','复权链')):
+            for block in stage.get(extra_key,[]) or []:
+                if extra_key=='chains':
+                    for r in block.get('rows',[]):
+                        rows.append({'阶段':extra_label,**r})
+                else:
+                    rows.append({'阶段':extra_label,**block})
     rows.extend({'阶段':'隔离',**r} for r in result['quarantine'])
     fields=list(dict.fromkeys(['阶段','run_id','规则版本']+[k for r in rows for k in r]))
     writer=csv.DictWriter(out,fieldnames=fields);writer.writeheader()

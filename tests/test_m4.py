@@ -13,4 +13,13 @@ def test_invalid_action_rejected():
     from app.errors import DomainError
     with pytest.raises(DomainError):action_math({'price':'10','cash':'11','bonus':'0','rights':'0','rights_price':'0'})
 def test_current_version_factor(ctx):assert ctx['stages']['4']['rows'][0]['行动版本']=='2'
+def test_lineage_survives_deepcopy(ctx):
+    from copy import deepcopy
+    from app.modules.m4_factors.rules import apply
+    c=deepcopy(ctx)
+    result=apply(c)
+    assert len(result['chains'])==len(ctx['factor_chains'])
+def test_chain_break_metrics_default_zero(ctx):
+    metrics={m[0]:m[1] for m in ctx['stages']['4']['metrics']}
+    assert metrics['复权链接续']==0 and metrics['复权链断点']==0
 

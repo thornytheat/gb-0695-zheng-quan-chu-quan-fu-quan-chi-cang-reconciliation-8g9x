@@ -1,2 +1,22 @@
 {% extends 'base.html' %}
-{% block stage_visual %}{% for r in run.stages["4"].rows[:5] %}<div class="entry"><span>{{r["证券"]}}</span><b>{{r["参考价_CNY"]}}</b></div><div class="factor-track"><i style="width:{{[100,r['复权因子']|float*50]|min}}%"></i></div>{% endfor %}<small>复权因子刻度 0–2</small>{% endblock %}
+{% block stage_visual %}
+<h3 style="margin:0 0 8px;font-size:12px">发行人复权链（累计因子）</h3>
+{% for c in current.chains %}
+<div class="entry {{'diff' if '待确认' in c['发行人身份']}}">
+  <span>发行人 {{c['发行人身份']}}<br><small>{% for r in c['rows'] %}{{r['证券']}}@{{r['除权日'][5:]}}{% if not loop.last %} → {% endif %}{% endfor %}</small></span>
+  <b>{{c['链尾因子']}}<br><small>{{c['rows']|length}} 次除权连乘</small></b>
+</div>
+{% endfor %}
+{% for link in current.links %}
+<div class="entry">
+  <span>接续 {{link['原代码']}} → {{link['新代码']}}<br><small>{{link['换码记录']}} · 归属 {{link['归属日期']}}</small></span>
+  <b>{{link['接续结论']}}<br><small>身份 {{link['接续身份']}}</small></b>
+</div>
+{% endfor %}
+{% for link in current.pending_links %}
+<div class="entry diff">
+  <span>断点 {{link['原代码']}} → {{link['新代码']}}<br><small>{{link['换码记录']}} · 归属记录晚到</small></span>
+  <b>待确认<br><small>因子不跨链接续</small></b>
+</div>
+{% endfor %}
+{% endblock %}
